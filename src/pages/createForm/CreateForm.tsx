@@ -32,7 +32,6 @@ const CreateForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const form = useSelector((state: RootState) => state.form.data);
-  console.log(form);
 
   useEffect(() => {
     dispatch(
