@@ -16,7 +16,7 @@ const MyForms = () => {
   if (forms.length === 0) {
     return (
       <div
-        className="cursor-pointer p-6 border border-gray-400 rounded-md text-center"
+        className="cursor-pointer p-6 border border-gray-400 rounded-md text-center mt-10"
         onClick={() => navigate("/create")}
       >
         No forms found. Click here to create a new form.

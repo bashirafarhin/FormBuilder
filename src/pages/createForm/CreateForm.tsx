@@ -93,7 +93,6 @@ const CreateForm = () => {
           type: "select",
           required: false,
           options: [],
-          isMultipleSelectAllowed: false,
         } as SelectFieldType;
         break;
       case "textarea":

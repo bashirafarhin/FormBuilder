@@ -5,13 +5,15 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center m-auto">
-      <h1 className="text-[10vw] font-semibold">
-        <i>Form Builder</i>
+    <div className="flex flex-col items-center justify-center min-h-screen mx-auto">
+      <h1 className="text-5xl md:text-8xl font-semibold italic m-0 p-0">
+        Form
       </h1>
-      <div className="flex flex-col p-2 sm:flex-row items-center gap-10">
+      <h1 className="text-5xl md:text-8xl font-semibold italic m-0 p-0">
+        Builder
+      </h1>
+      <div className="flex flex-col p-2 md:flex-row items-center gap-10 mt-5">
         <Button onClick={() => navigate("/create")}>Create</Button>
-        <Button onClick={() => navigate("/preview")}>Preview</Button>
         <Button onClick={() => navigate("/myforms")}>Previous</Button>
       </div>
     </div>

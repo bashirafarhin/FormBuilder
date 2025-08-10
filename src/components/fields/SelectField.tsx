@@ -19,7 +19,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
   const [options, setOptions] = useState(
     Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
   );
-  const [multiple, setMultiple] = useState(!!fieldVal.isMultipleSelectAllowed);
   const [required, setRequired] = useState(!!fieldVal.required);
 
   // Sync label changes
@@ -42,12 +41,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
     onFieldChange("options", optionsArray);
   };
 
-  // Sync multiple checkbox changes
-  const handleMultipleChange = (checked: boolean) => {
-    setMultiple(checked);
-    onFieldChange("multiple", checked);
-  };
-
   // Sync required checkbox changes
   const handleRequiredChange = (checked: boolean) => {
     setRequired(checked);
@@ -60,7 +53,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
     setOptions(
       Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
     );
-    setMultiple(!!fieldVal.isMultipleSelectAllowed);
     setRequired(!!fieldVal.required);
   }, [fieldVal]);
 
@@ -94,14 +86,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
           onChange={handleOptionsChange}
         />
       </div>
-
-      <label className="flex items-center gap-2">
-        <Checkbox
-          checked={multiple}
-          onCheckedChange={(checked) => handleMultipleChange(!!checked)}
-        />
-        Allow multiple selections
-      </label>
 
       <label className="flex items-center gap-2">
         <Checkbox

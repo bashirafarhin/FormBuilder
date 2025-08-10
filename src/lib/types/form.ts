@@ -51,7 +51,6 @@ export interface RadioFieldType extends BaseField {
 export interface SelectFieldType extends BaseField {
   type: "select";
   options: (string | number)[];
-  isMultipleSelectAllowed: boolean;
 }
 
 export interface TextAreaFieldType extends BaseField {

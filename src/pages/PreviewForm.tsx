@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { FormType } from "../lib/types/form";
-import UserForm from "../components/userForm";
+import UserForm from "../components/fillers/UserForm";
 
 const PreviewForm = () => {
   const { id } = useParams<{ id: string }>();
