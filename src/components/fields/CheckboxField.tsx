@@ -4,6 +4,7 @@ import type { CheckBoxFieldType } from "../../lib/types/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { cn } from "../../lib/utils";
 
 interface CheckboxFieldProps {
   fieldVal: CheckBoxFieldType;
@@ -41,18 +42,19 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   };
 
   return (
-    <div className="space-y-3">
-      <h4 className="text-md font-semibold mb-2">
-        Checkbox Field Configuration
-      </h4>
-
+    <div
+      className={cn(
+        fieldVal.error ? "border-red-500" : "border-gray-300",
+        "space-y-4 border rounded-lg p-4"
+      )}
+    >
       <div>
-        <Label className="block mb-1" htmlFor="label">
-          Label / Question
+        <Label htmlFor="field-label">
+          Label <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="label"
-          placeholder="e.g. Choose your hobbies"
+          placeholder="Enter field label"
           value={fieldVal.label}
           onChange={(e) => onFieldChange("label", e.target.value)}
         />
@@ -60,7 +62,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
 
       <div>
         <Label className="block mb-1" htmlFor="options">
-          Options (comma-separated)
+          Options (comma-separated) <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="options"
@@ -77,6 +79,9 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         />
         Required field
       </label>
+      {fieldVal.error && (
+        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+      )}
     </div>
   );
 };

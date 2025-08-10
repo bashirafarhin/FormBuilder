@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import type { SelectFieldType } from "../../lib/types/form";
-
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { cn } from "../../lib/utils";
 
 interface SelectFieldProps {
   fieldVal: SelectFieldType;
@@ -19,7 +19,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   const [options, setOptions] = useState(
     Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
   );
-  const [multiple, setMultiple] = useState(!!fieldVal.multiple);
+  const [multiple, setMultiple] = useState(!!fieldVal.isMultipleSelectAllowed);
   const [required, setRequired] = useState(!!fieldVal.required);
 
   // Sync label changes
@@ -60,29 +60,32 @@ const SelectField: React.FC<SelectFieldProps> = ({
     setOptions(
       Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
     );
-    setMultiple(!!fieldVal.multiple);
+    setMultiple(!!fieldVal.isMultipleSelectAllowed);
     setRequired(!!fieldVal.required);
   }, [fieldVal]);
 
   return (
-    <div className="space-y-4">
-      <h4 className="text-md font-semibold">Select Field</h4>
-
+    <div
+      className={cn(
+        fieldVal.error ? "border-red-500" : "border-gray-300",
+        "space-y-4 border rounded-lg p-4"
+      )}
+    >
       <div>
-        <Label htmlFor="select-label" className="block mb-1">
-          Label / Question
+        <Label htmlFor="field-label">
+          Label <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="select-label"
-          placeholder="Label / Question"
+          placeholder="Enter field label"
           value={label}
           onChange={handleLabelChange}
         />
       </div>
 
       <div>
-        <Label htmlFor="select-options" className="block mb-1">
-          Options (comma-separated)
+        <Label className="block mb-1" htmlFor="options">
+          Options (comma-separated) <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="select-options"
@@ -107,6 +110,9 @@ const SelectField: React.FC<SelectFieldProps> = ({
         />
         Required
       </label>
+      {fieldVal.error && (
+        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+      )}
     </div>
   );
 };

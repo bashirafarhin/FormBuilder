@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { FormType, FormFieldType } from "../../../src/lib/types/form";
+import type { FormType, FormFieldType } from "../../../lib/types/form";
 
 interface FormState {
   data: FormType;
@@ -9,7 +9,7 @@ interface FormState {
 }
 
 const initialState: FormState = {
-  data: { name: "", formFields: [] },
+  data: { id: "", name: "", formFields: [] },
   loading: false,
   error: null,
 };
@@ -41,7 +41,20 @@ const formSlice = createSlice({
       const field = state.data.formFields.find((f) => f.id === id);
       (field as any)[key] = value;
     },
+    setFieldError(
+      state,
+      action: PayloadAction<{ id: string; error: string | null }>
+    ) {
+      const { id, error } = action.payload;
+      const field = state.data.formFields.find((f) => f.id === id);
+      if (field) {
+        field.error = error;
+      }
+    },
     resetForm: () => initialState,
+    setFormFields(state, action: PayloadAction<FormFieldType[]>) {
+      state.data.formFields = action.payload;
+    },
   },
 });
 

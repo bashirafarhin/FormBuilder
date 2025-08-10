@@ -3,6 +3,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import type { TextFieldType } from "../../lib/types/form";
+import { cn } from "../../lib/utils";
 
 interface TextFieldProps {
   fieldVal: TextFieldType;
@@ -13,10 +14,17 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
   onFieldChange;
 
   return (
-    <div className="space-y-4 border rounded-lg p-4">
-      {/* Label */}
+    <div
+      className={cn(
+        fieldVal.error ? "border-red-500" : "border-gray-300",
+        "space-y-4 border rounded-lg p-4"
+      )}
+    >
       <div>
-        <Label htmlFor="field-label">Label</Label>
+        <Label htmlFor="field-label">
+          Label <span className="text-gray-500">*</span>
+        </Label>
+
         <Input
           id="field-label"
           placeholder="Enter field label"
@@ -77,12 +85,22 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
             <Input
               id="minLength"
               type="number"
-              value={fieldVal.minLength ?? 0}
-              onChange={(e) =>
-                onFieldChange("minLength", parseInt(e.target.value) || 0)
+              min={fieldVal.required ? 1 : 0} // UI restriction
+              value={
+                fieldVal.required && fieldVal.minLength === 0
+                  ? 1
+                  : fieldVal.minLength ?? 0
               }
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                onFieldChange(
+                  "minLength",
+                  fieldVal.required ? Math.max(1, value) : value
+                );
+              }}
             />
           </div>
+
           <div>
             <Label htmlFor="maxLength">Max Length</Label>
             <Input
@@ -150,6 +168,9 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
             Must include special character
           </label>
         </div>
+      )}
+      {fieldVal.error && (
+        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
       )}
     </div>
   );

@@ -18,7 +18,7 @@ function App() {
           <Route element={<RootLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/create" element={<CreateForm />} />
-            <Route path="/preview" element={<PreviewForm />} />
+            <Route path="/preview/:id" element={<PreviewForm />} />
             <Route path="/myforms" element={<MyForms />} />
             <Route path="*" element={<NotFound />} />
           </Route>

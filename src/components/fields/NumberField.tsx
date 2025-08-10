@@ -1,9 +1,9 @@
 import React from "react";
 import type { NumberFieldType } from "../../lib/types/form";
-
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { cn } from "../../lib/utils";
 
 interface NumberFieldProps {
   fieldVal: NumberFieldType;
@@ -15,16 +15,19 @@ const NumberField: React.FC<NumberFieldProps> = ({
   onFieldChange,
 }) => {
   return (
-    <div className="space-y-4">
-      <h4 className="text-md font-semibold">Number Field</h4>
-
+    <div
+      className={cn(
+        fieldVal.error ? "border-red-500" : "border-gray-300",
+        "space-y-4 border rounded-lg p-4"
+      )}
+    >
       <div>
-        <Label htmlFor="label" className="block mb-1">
-          Label / Question
+        <Label htmlFor="field-label">
+          Label <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="label"
-          placeholder="Label / Question"
+          placeholder="Enter field label"
           value={fieldVal.label}
           onChange={(e) => onFieldChange("label", e.target.value)}
         />
@@ -42,42 +45,46 @@ const NumberField: React.FC<NumberFieldProps> = ({
         />
       </div>
 
-      <div>
-        <Label htmlFor="min" className="block mb-1">
-          Min Value
-        </Label>
-        <Input
-          id="min"
-          type="number"
-          value={fieldVal.min ?? 0}
-          onChange={(e) =>
-            onFieldChange(
-              "min",
-              e.target.value === "" ? 0 : Number(e.target.value)
-            )
-          }
-        />
-      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="minValue" className="block mb-1">
+            Min Value
+          </Label>
+          <Input
+            id="min"
+            type="number"
+            value={fieldVal.minValue ?? 0}
+            onChange={(e) =>
+              onFieldChange(
+                "min",
+                e.target.value === "" ? 0 : Number(e.target.value)
+              )
+            }
+          />
+        </div>
 
-      <div>
-        <Label htmlFor="max" className="block mb-1">
-          Max Value
-        </Label>
-        <Input
-          id="max"
-          type="number"
-          value={fieldVal.max ?? ""}
-          onChange={(e) => {
-            const val = e.target.value;
-            onFieldChange("max", val === "" ? "" : Number(val));
-          }}
-        />
+        <div>
+          <Label htmlFor="max" className="block mb-1">
+            Max Value
+          </Label>
+          <Input
+            id="max"
+            type="number"
+            value={fieldVal.maxValue ?? ""}
+            onChange={(e) => {
+              const val = e.target.value;
+              onFieldChange("maxValue", val === "" ? "" : Number(val));
+            }}
+          />
+        </div>
       </div>
 
       <label className="flex items-center gap-2">
         <Checkbox
-          checked={!!fieldVal.decimal}
-          onCheckedChange={(checked) => onFieldChange("decimal", !!checked)}
+          checked={!!fieldVal.isDecimalAllowed}
+          onCheckedChange={(checked) =>
+            onFieldChange("isDecimalAllowed", !!checked)
+          }
         />
         Allow Decimal
       </label>
@@ -89,6 +96,9 @@ const NumberField: React.FC<NumberFieldProps> = ({
         />
         Required
       </label>
+      {fieldVal.error && (
+        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+      )}
     </div>
   );
 };

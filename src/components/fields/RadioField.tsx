@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import type { RadioFieldType } from "../../lib/types/form";
-
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { cn } from "../../lib/utils";
 
 interface RadioFieldProps {
   fieldVal: RadioFieldType;
@@ -43,24 +43,27 @@ const RadioField: React.FC<RadioFieldProps> = ({ fieldVal, onFieldChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <h4 className="text-md font-semibold">Radio Field</h4>
-
+    <div
+      className={cn(
+        fieldVal.error ? "border-red-500" : "border-gray-300",
+        "space-y-4 border rounded-lg p-4"
+      )}
+    >
       <div>
-        <Label htmlFor="radio-label" className="block mb-1">
-          Label / Question
+        <Label htmlFor="field-label">
+          Label <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="radio-label"
-          placeholder="e.g. Select your gender"
+          placeholder="Enter field label"
           value={fieldVal.label}
           onChange={handleLabelChange}
         />
       </div>
 
       <div>
-        <Label htmlFor="radio-options" className="block mb-1">
-          Options (comma-separated)
+        <Label className="block mb-1" htmlFor="options">
+          Options (comma-separated) <span className="text-gray-500">*</span>
         </Label>
         <Input
           id="radio-options"
@@ -77,6 +80,9 @@ const RadioField: React.FC<RadioFieldProps> = ({ fieldVal, onFieldChange }) => {
         />
         Required field
       </label>
+      {fieldVal.error && (
+        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+      )}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 export interface FormType {
+  id: string;
   name: string | "Untitled Form";
   formFields: FormFieldType[];
 }
@@ -16,7 +17,8 @@ export interface BaseField {
   id: string;
   label: string;
   type: FieldType;
-  required?: boolean;
+  required: boolean;
+  error?: string | null;
 }
 
 // ---------------------------
@@ -49,7 +51,7 @@ export interface RadioFieldType extends BaseField {
 export interface SelectFieldType extends BaseField {
   type: "select";
   options: (string | number)[];
-  multiple: boolean;
+  isMultipleSelectAllowed: boolean;
 }
 
 export interface TextAreaFieldType extends BaseField {
@@ -61,10 +63,10 @@ export interface TextAreaFieldType extends BaseField {
 
 export interface NumberFieldType extends BaseField {
   type: "number";
-  min: number;
-  max: number;
+  minValue?: number;
+  maxValue?: number;
   placeholder?: string;
-  decimal: boolean;
+  isDecimalAllowed: boolean;
 }
 
 export interface DateFieldType extends BaseField {

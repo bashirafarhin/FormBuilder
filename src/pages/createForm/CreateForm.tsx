@@ -2,11 +2,10 @@ import { useEffect } from "react";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../redux/store";
-import { formActions } from "../../../redux/features/form/formSlice";
+import type { AppDispatch, RootState } from "../../redux/store";
+import { formActions } from "../../redux/features/form/formSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-
 import TextField from "../../components/fields/TextField";
 import type {
   CheckBoxFieldType,
@@ -26,6 +25,8 @@ import SelectField from "../../components/fields/SelectField";
 import TextAreaField from "../../components/fields/TextAreaField";
 import NumberField from "../../components/fields/NumberField";
 import DateField from "../../components/fields/DateField";
+import type { FormType } from "../../lib/types/form";
+import DraggableFieldsList from "./DraggableFieldList";
 
 const CreateForm = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const CreateForm = () => {
   useEffect(() => {
     dispatch(
       formActions.createForm({
+        id: uuidv4(),
         name: "Untitled Form",
         formFields: [],
       })
@@ -57,7 +59,7 @@ const CreateForm = () => {
           required: false,
           placeholder: "",
           minLength: 0,
-          maxLength: 1000,
+          maxLength: 3000,
           isEmail: false,
           isPassword: false,
           includeNumber: true,
@@ -69,58 +71,58 @@ const CreateForm = () => {
       case "checkbox":
         newField = {
           id: uuidv4(),
-          label: "Add label",
+          label: "",
           type: "checkbox",
           required: false,
-          options: ["option1"],
+          options: [],
         } as CheckBoxFieldType;
         break;
       case "radio":
         newField = {
           id: uuidv4(),
-          label: "Add label",
+          label: "",
           type: "radio",
           required: false,
-          options: ["option1"],
+          options: [],
         } as RadioFieldType;
         break;
       case "select":
         newField = {
           id: uuidv4(),
-          label: "Add label",
+          label: "",
           type: "select",
           required: false,
-          options: ["option1"],
-          multiple: false,
+          options: [],
+          isMultipleSelectAllowed: false,
         } as SelectFieldType;
         break;
       case "textarea":
         newField = {
           id: uuidv4(),
-          label: "Add label",
+          label: "",
           type: "textarea",
           required: false,
           placeholder: "",
           minLength: 0,
-          maxLength: 1000,
+          maxLength: 3000,
         } as TextAreaFieldType;
         break;
       case "number":
         newField = {
           id: uuidv4(),
-          label: "Add label",
+          label: "",
           type: "number",
           required: false,
           placeholder: "",
-          min: 0,
-          max: 1000,
-          decimal: false,
+          minValue: 0,
+          maxValue: 10000,
+          isDecimalAllowed: false,
         } as NumberFieldType;
         break;
       case "date":
         newField = {
           id: uuidv4(),
-          label: "Add label",
+          label: "",
           type: "date",
           required: false,
           minDate: "",
@@ -139,105 +141,142 @@ const CreateForm = () => {
     dispatch(formActions.addField(newField));
   };
 
+  const handleSaveClick = () => {
+    let isValid = true;
+    form.formFields.forEach((field) => {
+      dispatch(formActions.setFieldError({ id: field.id, error: null }));
+      // Check for empty label
+      if (!field.label.trim()) {
+        dispatch(
+          formActions.setFieldError({
+            id: field.id,
+            error: "Label is required",
+          })
+        );
+        isValid = false;
+      }
+      // Check for options if applicable
+      if (
+        (field.type === "checkbox" ||
+          field.type === "radio" ||
+          field.type === "select") &&
+        "options" in field &&
+        (!field.options || field.options.length === 0)
+      ) {
+        dispatch(
+          formActions.setFieldError({
+            id: field.id,
+            error: "At least one option is required",
+          })
+        );
+        isValid = false;
+      }
+    });
+    if (!isValid) return;
+    const storedForms = localStorage.getItem("forms");
+    let formsArray: FormType[] = storedForms ? JSON.parse(storedForms) : [];
+    formsArray.push(form);
+    localStorage.setItem("forms", JSON.stringify(formsArray));
+    navigate(`/preview/${form.id}`);
+  };
+
+  const handleReorderFields = (newFields: FormFieldType[]) => {
+    dispatch(formActions.setFormFields(newFields));
+  };
+
   return (
-    <div className="border border-pink-500 p-6 space-y-4 flex flex-col">
+    <div className="w-[60vw] mx-auto p-6 space-y-4 flex flex-col">
       <h1 className="text-[6vw] text-center font-semibold">
         <i>Create Form</i>
       </h1>
-
-      {/* Form name input bound to Redux */}
       <Input
         value={form.name}
         onChange={(e) => dispatch(formActions.updateFormName(e.target.value))}
         placeholder="Enter form name"
-        className="w-full"
+        className="w-fit mx-auto text-center"
       />
-
-      {/* Render all form fields */}
-      {form.formFields.map((field: FormFieldType) => {
-        switch (field.type) {
-          case "text":
-            return (
-              <TextField
-                key={field.id}
-                fieldVal={field as TextFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          case "checkbox":
-            return (
-              <CheckboxField
-                key={field.id}
-                fieldVal={field as CheckBoxFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          case "radio":
-            return (
-              <RadioField
-                key={field.id}
-                fieldVal={field as RadioFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          case "textarea":
-            return (
-              <TextAreaField
-                key={field.id}
-                fieldVal={field as TextAreaFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          case "number":
-            return (
-              <NumberField
-                key={field.id}
-                fieldVal={field as NumberFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          case "select":
-            return (
-              <SelectField
-                key={field.id}
-                fieldVal={field as SelectFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          case "date":
-            return (
-              <DateField
-                key={field.id}
-                fieldVal={field as DateFieldType}
-                onFieldChange={(key: string, value: any) =>
-                  handleFieldChange(field.id, key, value)
-                }
-              />
-            );
-          default:
-            return <p className="text-red-500">Invalid Field</p>;
-        }
-      })}
-
-      {/* shadcn DropdownMenu for adding field */}
+      <DraggableFieldsList
+        fields={form.formFields}
+        onReorder={handleReorderFields}
+        renderField={(field) => {
+          switch (field.type) {
+            case "text":
+              return (
+                <TextField
+                  key={field.id}
+                  fieldVal={field as TextFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            case "checkbox":
+              return (
+                <CheckboxField
+                  key={field.id}
+                  fieldVal={field as CheckBoxFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            case "radio":
+              return (
+                <RadioField
+                  key={field.id}
+                  fieldVal={field as RadioFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            case "textarea":
+              return (
+                <TextAreaField
+                  key={field.id}
+                  fieldVal={field as TextAreaFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            case "number":
+              return (
+                <NumberField
+                  key={field.id}
+                  fieldVal={field as NumberFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            case "select":
+              return (
+                <SelectField
+                  key={field.id}
+                  fieldVal={field as SelectFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            case "date":
+              return (
+                <DateField
+                  key={field.id}
+                  fieldVal={field as DateFieldType}
+                  onFieldChange={(key: string, value: any) =>
+                    handleFieldChange(field.id, key, value)
+                  }
+                />
+              );
+            default:
+              return <p className="text-red-500">Invalid Field</p>;
+          }
+        }}
+      />
       <AddFieldButton addFieldByType={addFieldByType} />
-
-      <Button
-        disabled={form.formFields.length === 0}
-        onClick={() => navigate("/preview")}
-      >
+      <Button disabled={form.formFields.length === 0} onClick={handleSaveClick}>
         Save and Preview Form
       </Button>
     </div>
