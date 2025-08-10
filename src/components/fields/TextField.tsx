@@ -16,13 +16,13 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
   return (
     <div
       className={cn(
-        fieldVal.error ? "border-red-500" : "border-gray-300",
-        "space-y-4 border rounded-lg p-4"
+        fieldVal.error ? "border-red-600" : "border-zinc-700",
+        "space-y-4 border rounded-lg p-4 bg-zinc-900"
       )}
     >
       <div>
-        <Label htmlFor="field-label">
-          Label <span className="text-gray-500">*</span>
+        <Label htmlFor="field-label" className="text-zinc-200">
+          Label <span className="text-zinc-500">*</span>
         </Label>
 
         <Input
@@ -30,26 +30,31 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
           placeholder="Enter field label"
           value={fieldVal.label}
           onChange={(e) => onFieldChange("label", e.target.value)}
+          className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
         />
       </div>
 
       {/* Placeholder */}
       <div>
-        <Label htmlFor="placeholder">Placeholder</Label>
+        <Label htmlFor="placeholder" className="text-zinc-200">
+          Placeholder
+        </Label>
         <Input
           id="placeholder"
           placeholder="Enter placeholder text"
           value={fieldVal.placeholder}
           onChange={(e) => onFieldChange("placeholder", e.target.value)}
+          className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
         />
       </div>
 
       {/* Checkbox group */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 text-zinc-200">
         <label className="flex items-center gap-2">
           <Checkbox
             checked={!!fieldVal.required}
             onCheckedChange={(checked) => onFieldChange("required", checked)}
+            className="border-zinc-600 checked:bg-zinc-600"
           />
           Required
         </label>
@@ -61,6 +66,7 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
               onFieldChange("isEmail", checked);
               if (checked) onFieldChange("isPassword", false);
             }}
+            className="border-zinc-600 checked:bg-zinc-600"
           />
           Is Email
         </label>
@@ -72,6 +78,7 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
               onFieldChange("isPassword", checked);
               if (checked) onFieldChange("isEmail", false);
             }}
+            className="border-zinc-600 checked:bg-zinc-600"
           />
           Is Password
         </label>
@@ -79,9 +86,11 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
 
       {/* Min / Max length */}
       {!fieldVal.isEmail && !fieldVal.isPassword && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="minLength">Min Length</Label>
+            <Label htmlFor="minLength" className="text-zinc-200">
+              Min Length
+            </Label>
             <Input
               id="minLength"
               type="number"
@@ -98,11 +107,14 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
                   fieldVal.required ? Math.max(1, value) : value
                 );
               }}
+              className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
             />
           </div>
 
           <div>
-            <Label htmlFor="maxLength">Max Length</Label>
+            <Label htmlFor="maxLength" className="text-zinc-200">
+              Max Length
+            </Label>
             <Input
               id="maxLength"
               type="number"
@@ -113,6 +125,7 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
                   e.target.value ? parseInt(e.target.value) : ""
                 )
               }
+              className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
             />
           </div>
         </div>
@@ -120,11 +133,15 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
 
       {/* Password rules */}
       {fieldVal.isPassword && (
-        <div className="space-y-2">
+        <div className="space-y-2 text-zinc-200">
           <h4 className="text-sm font-semibold">Password Rules</h4>
 
           <label className="flex items-center gap-2">
-            <Checkbox checked disabled />
+            <Checkbox
+              checked
+              disabled
+              className="border-zinc-600 checked:bg-zinc-600"
+            />
             Min Length: 6 (Always enabled)
           </label>
 
@@ -134,6 +151,7 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
               onCheckedChange={(checked) =>
                 onFieldChange("includeNumber", checked)
               }
+              className="border-zinc-600 checked:bg-zinc-600"
             />
             Must include number
           </label>
@@ -144,6 +162,7 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
               onCheckedChange={(checked) =>
                 onFieldChange("includeLowercase", checked)
               }
+              className="border-zinc-600 checked:bg-zinc-600"
             />
             Must include lowercase letter
           </label>
@@ -154,6 +173,7 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
               onCheckedChange={(checked) =>
                 onFieldChange("includeUppercase", checked)
               }
+              className="border-zinc-600 checked:bg-zinc-600"
             />
             Must include uppercase letter
           </label>
@@ -164,13 +184,14 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
               onCheckedChange={(checked) =>
                 onFieldChange("includeSpecialChar", checked)
               }
+              className="border-zinc-600 checked:bg-zinc-600"
             />
             Must include special character
           </label>
         </div>
       )}
       {fieldVal.error && (
-        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+        <p className="text-red-600 text-sm mt-1">{fieldVal.error}</p>
       )}
     </div>
   );

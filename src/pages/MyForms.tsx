@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { FormType } from "../lib/types/form";
+import { Button } from "../components/ui/Button";
 
 const MyForms = () => {
   const [forms, setForms] = useState<FormType[]>([]);
@@ -13,31 +14,33 @@ const MyForms = () => {
     }
   }, []);
 
-  if (forms.length === 0) {
-    return (
-      <div
-        className="cursor-pointer p-6 border border-gray-400 rounded-md text-center mt-10"
-        onClick={() => navigate("/create")}
-      >
-        No forms found. Click here to create a new form.
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      {forms.map((form) => (
-        <div
-          key={form.id}
-          className="cursor-pointer p-4 border border-blue-400 rounded-md hover:bg-blue-50"
-          onClick={() => navigate(`/preview/${form.id}`)}
-        >
-          <h2 className="text-lg font-semibold">
-            {form.name || "Untitled Form"}
-          </h2>
-          <p>{form.formFields.length} fields</p>
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-6 text-center mt-40">
+      {/* Forms list or empty message */}
+      {forms.length === 0 ? (
+        <div className="flex flex-col items-center space-y-4">
+          <p>No forms found.</p>
+          <Button onClick={() => navigate("/create")}>
+            Click here to create a new form.
+          </Button>
         </div>
-      ))}
+      ) : (
+        <div className="space-y-4 max-w-lg mx-auto">
+          <h2 className="text-xl font-semibold mb-2">Previous Forms</h2>
+          {forms.map((form) => (
+            <div
+              key={form.id}
+              className="cursor-pointer p-4 border border-zinc-700 rounded-md hover:bg-zinc-900 transition"
+              onClick={() => navigate(`/preview/${form.id}`)}
+            >
+              <h3 className="text-lg font-semibold">
+                {form.name || "Untitled Form"}
+              </h3>
+              <p className="text-gray-600">{form.formFields.length} fields</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -184,100 +184,113 @@ const CreateForm = () => {
   };
 
   return (
-    <div className="w-[60vw] mx-auto p-6 space-y-4 flex flex-col">
-      <h1 className="text-[6vw] text-center font-semibold">
-        <i>Create Form</i>
-      </h1>
-      <Input
-        value={form.name}
-        onChange={(e) => dispatch(formActions.updateFormName(e.target.value))}
-        placeholder="Enter form name"
-        className="w-fit mx-auto text-center"
-      />
-      <DraggableFieldsList
-        fields={form.formFields}
-        onReorder={handleReorderFields}
-        renderField={(field) => {
-          switch (field.type) {
-            case "text":
-              return (
-                <TextField
-                  key={field.id}
-                  fieldVal={field as TextFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            case "checkbox":
-              return (
-                <CheckboxField
-                  key={field.id}
-                  fieldVal={field as CheckBoxFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            case "radio":
-              return (
-                <RadioField
-                  key={field.id}
-                  fieldVal={field as RadioFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            case "textarea":
-              return (
-                <TextAreaField
-                  key={field.id}
-                  fieldVal={field as TextAreaFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            case "number":
-              return (
-                <NumberField
-                  key={field.id}
-                  fieldVal={field as NumberFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            case "select":
-              return (
-                <SelectField
-                  key={field.id}
-                  fieldVal={field as SelectFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            case "date":
-              return (
-                <DateField
-                  key={field.id}
-                  fieldVal={field as DateFieldType}
-                  onFieldChange={(key: string, value: any) =>
-                    handleFieldChange(field.id, key, value)
-                  }
-                />
-              );
-            default:
-              return <p className="text-red-500">Invalid Field</p>;
-          }
-        }}
-      />
-      <AddFieldButton addFieldByType={addFieldByType} />
-      <Button disabled={form.formFields.length === 0} onClick={handleSaveClick}>
-        Save and Preview Form
-      </Button>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="border border-zinc-700 flex flex-col rounded-lg shadow-lg space-y-6 p-6">
+        <h1 className="text-[6vw] text-center font-semibold text-white">
+          <i>Create Form</i>
+        </h1>
+
+        <Input
+          value={form.name}
+          onChange={(e) => dispatch(formActions.updateFormName(e.target.value))}
+          placeholder="Enter form name"
+          className="w-fit mx-auto text-center bg-zinc-800 text-white border border-zinc-700 rounded-md px-4 py-2
+          focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:border-zinc-500
+          transition-colors duration-200"
+        />
+
+        <DraggableFieldsList
+          fields={form.formFields}
+          onReorder={handleReorderFields}
+          renderField={(field) => {
+            switch (field.type) {
+              case "text":
+                return (
+                  <TextField
+                    key={field.id}
+                    fieldVal={field as TextFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              case "checkbox":
+                return (
+                  <CheckboxField
+                    key={field.id}
+                    fieldVal={field as CheckBoxFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              case "radio":
+                return (
+                  <RadioField
+                    key={field.id}
+                    fieldVal={field as RadioFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              case "textarea":
+                return (
+                  <TextAreaField
+                    key={field.id}
+                    fieldVal={field as TextAreaFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              case "number":
+                return (
+                  <NumberField
+                    key={field.id}
+                    fieldVal={field as NumberFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              case "select":
+                return (
+                  <SelectField
+                    key={field.id}
+                    fieldVal={field as SelectFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              case "date":
+                return (
+                  <DateField
+                    key={field.id}
+                    fieldVal={field as DateFieldType}
+                    onFieldChange={(key: string, value: any) =>
+                      handleFieldChange(field.id, key, value)
+                    }
+                  />
+                );
+              default:
+                return <p className="text-red-500">Invalid Field</p>;
+            }
+          }}
+        />
+
+        <AddFieldButton addFieldByType={addFieldByType} />
+
+        <Button
+          disabled={form.formFields.length === 0}
+          onClick={handleSaveClick}
+          className="bg-zinc-700 hover:bg-zinc-600 text-white font-semibold px-6 py-3 rounded-md
+          disabled:bg-zinc-500 disabled:cursor-not-allowed transition-colors duration-200"
+        >
+          Save and Preview Form
+        </Button>
+      </div>
     </div>
   );
 };

@@ -11,14 +11,12 @@ interface RadioFieldProps {
 }
 
 const RadioField: React.FC<RadioFieldProps> = ({ fieldVal, onFieldChange }) => {
-  // Initialize options string from fieldVal.options array
   const [options, setOptions] = useState(
     Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
   );
 
   const [isRequired, setIsRequired] = useState(!!fieldVal.required);
 
-  // Handle options input change: update local and notify parent with array
   const handleOptionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setOptions(val);
@@ -31,13 +29,11 @@ const RadioField: React.FC<RadioFieldProps> = ({ fieldVal, onFieldChange }) => {
     onFieldChange("options", optionsArray);
   };
 
-  // Handle required checkbox toggle
   const handleRequiredChange = (checked: boolean) => {
     setIsRequired(checked);
     onFieldChange("required", checked);
   };
 
-  // Handle label change
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFieldChange("label", e.target.value);
   };
@@ -45,43 +41,47 @@ const RadioField: React.FC<RadioFieldProps> = ({ fieldVal, onFieldChange }) => {
   return (
     <div
       className={cn(
-        fieldVal.error ? "border-red-500" : "border-gray-300",
-        "space-y-4 border rounded-lg p-4"
+        fieldVal.error ? "border-red-600" : "border-zinc-700",
+        "space-y-4 border rounded-lg p-4 bg-zinc-900"
       )}
     >
       <div>
-        <Label htmlFor="field-label">
-          Label <span className="text-gray-500">*</span>
+        <Label htmlFor="field-label" className="text-zinc-200">
+          Label <span className="text-zinc-500">*</span>
         </Label>
         <Input
           id="radio-label"
           placeholder="Enter field label"
           value={fieldVal.label}
           onChange={handleLabelChange}
+          className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
         />
       </div>
 
       <div>
-        <Label className="block mb-1" htmlFor="options">
-          Options (comma-separated) <span className="text-gray-500">*</span>
+        <Label className="block mb-1 text-zinc-200" htmlFor="options">
+          Options (comma-separated) <span className="text-zinc-500">*</span>
         </Label>
         <Input
           id="radio-options"
           placeholder="e.g. Male, Female, Other"
           value={options}
           onChange={handleOptionsChange}
+          className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
         />
       </div>
 
-      <label className="flex items-center gap-2">
+      <label className="flex items-center gap-2 text-zinc-200">
         <Checkbox
           checked={isRequired}
           onCheckedChange={(checked) => handleRequiredChange(!!checked)}
+          className="border-zinc-600 checked:bg-zinc-600"
         />
         Required field
       </label>
+
       {fieldVal.error && (
-        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+        <p className="text-red-600 text-sm mt-1">{fieldVal.error}</p>
       )}
     </div>
   );

@@ -15,18 +15,15 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   fieldVal,
   onFieldChange,
 }) => {
-  // Initialize options string from fieldVal.options (assuming it's an array)
   const [options, setOptions] = useState(
     Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
   );
   const [isRequired, setIsRequired] = useState(!!fieldVal.required);
 
-  // When options string changes, parse and send updated array to parent
   const handleOptionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setOptions(val);
 
-    // Parse comma separated string to array, trim each option, filter empty strings
     const optionsArray = val
       .split(",")
       .map((opt) => opt.trim())
@@ -35,7 +32,6 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
     onFieldChange("options", optionsArray);
   };
 
-  // Similarly for required checkbox
   const handleRequiredChange = (checked: boolean) => {
     setIsRequired(checked);
     onFieldChange("required", checked);
@@ -44,43 +40,47 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   return (
     <div
       className={cn(
-        fieldVal.error ? "border-red-500" : "border-gray-300",
-        "space-y-4 border rounded-lg p-4"
+        fieldVal.error ? "border-red-600" : "border-zinc-700",
+        "space-y-4 border rounded-lg p-4 bg-zinc-900"
       )}
     >
       <div>
-        <Label htmlFor="field-label">
-          Label <span className="text-gray-500">*</span>
+        <Label htmlFor="field-label" className="text-zinc-200">
+          Label <span className="text-zinc-500">*</span>
         </Label>
         <Input
           id="label"
           placeholder="Enter field label"
           value={fieldVal.label}
           onChange={(e) => onFieldChange("label", e.target.value)}
+          className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
         />
       </div>
 
       <div>
-        <Label className="block mb-1" htmlFor="options">
-          Options (comma-separated) <span className="text-gray-500">*</span>
+        <Label htmlFor="options" className="block mb-1 text-zinc-200">
+          Options (comma-separated) <span className="text-zinc-500">*</span>
         </Label>
         <Input
           id="options"
           value={options}
           onChange={handleOptionsChange}
           placeholder="e.g. Reading, Swimming, Traveling"
+          className="bg-zinc-800 text-white border-zinc-700 focus:ring-zinc-600"
         />
       </div>
 
-      <label className="flex items-center gap-2">
+      <label className="flex items-center gap-2 text-zinc-200">
         <Checkbox
           checked={isRequired}
           onCheckedChange={(checked) => handleRequiredChange(!!checked)}
+          className="border-zinc-600 checked:bg-zinc-600"
         />
         Required field
       </label>
+
       {fieldVal.error && (
-        <p className="text-red-500 text-sm mt-1">{fieldVal.error}</p>
+        <p className="text-red-600 text-sm mt-1">{fieldVal.error}</p>
       )}
     </div>
   );
