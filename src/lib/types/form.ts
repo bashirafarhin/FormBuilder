@@ -22,11 +22,17 @@ export interface BaseField {
   error?: string | null;
 }
 
+interface DerivedFieldOptions {
+  isDerived?: boolean;
+  parentFields?: string[];
+  formula?: string; // e.g. "${fieldId1}+${fieldId2}"
+}
+
 // ---------------------------
 // Field Variants
 // ---------------------------
 
-export interface TextFieldType extends BaseField {
+export interface TextFieldType extends BaseField, DerivedFieldOptions {
   type: "text";
   placeholder: string;
   minLength: number;
@@ -61,7 +67,7 @@ export interface TextAreaFieldType extends BaseField {
   maxLength?: number;
 }
 
-export interface NumberFieldType extends BaseField {
+export interface NumberFieldType extends BaseField, DerivedFieldOptions {
   type: "number";
   minValue?: number;
   maxValue?: number;

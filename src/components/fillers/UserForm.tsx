@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
@@ -22,6 +22,8 @@ const UserForm: React.FC<{ form: FormType }> = ({ form }) => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -30,6 +32,22 @@ const UserForm: React.FC<{ form: FormType }> = ({ form }) => {
   const onSubmit = () => {
     alert("Your Form has been successfully submitted");
   };
+
+  function evaluateFormula(
+    formula: string,
+    fieldValues: Record<string, any>,
+    fields: any[]
+  ) {
+    let result = formula;
+
+    fields.forEach((f) => {
+      // Match {Label} exactly, case sensitive
+      const regex = new RegExp(`\\{${f.label}\\}`, "g");
+      result = result.replace(regex, fieldValues[f.id] || "");
+    });
+
+    return result;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -42,8 +60,63 @@ const UserForm: React.FC<{ form: FormType }> = ({ form }) => {
         </h1>
         {form.formFields.map((field) => {
           switch (field.type) {
+            // case "text": {
+            //   const f = field as TextFieldType;
+            //   const parentValues = watch(f.parentFields ?? []);
+
+            //   useEffect(() => {
+            //     if (f.formula) {
+            //       const computedValue = evaluateFormula(
+            //         f.formula,
+            //         parentValues,
+            //         form.formFields
+            //       );
+            //       setValue(f.id, computedValue ?? "");
+            //     }
+            //   }, [parentValues, f.formula, f.id, form.formFields, setValue]);
+
+            //   return (
+            //     <div key={f.id} className="flex flex-col space-y-1">
+            //       <Label htmlFor={f.id} className="text-zinc-200">
+            //         {f.label}
+            //       </Label>
+            //       <Input
+            //         id={f.id}
+            //         type={
+            //           f.isPassword ? "password" : f.isEmail ? "email" : "text"
+            //         }
+            //         placeholder={f.placeholder}
+            //         {...register(f.id)}
+            //         readOnly={!!f.formula} // Derived fields can't be edited
+            //         className={`bg-zinc-800 text-white border ${
+            //           errors[f.id] ? "border-red-600" : "border-zinc-700"
+            //         } focus:ring-zinc-600`}
+            //       />
+            //       {errors[f.id] && (
+            //         <p className="text-red-600 text-sm">
+            //           {errors[f.id]?.message?.toString()}
+            //         </p>
+            //       )}
+            //     </div>
+            //   );
+            // }
             case "text": {
               const f = field as TextFieldType;
+
+              // Watch all form values so formula always has fresh data
+              const allValues = watch();
+
+              useEffect(() => {
+                if (f.formula) {
+                  const computedValue = evaluateFormula(
+                    f.formula,
+                    allValues,
+                    form.formFields
+                  );
+                  setValue(f.id, computedValue ?? "");
+                }
+              }, [allValues, f.formula, f.id, form.formFields, setValue]);
+
               return (
                 <div key={f.id} className="flex flex-col space-y-1">
                   <Label htmlFor={f.id} className="text-zinc-200">
@@ -56,6 +129,7 @@ const UserForm: React.FC<{ form: FormType }> = ({ form }) => {
                     }
                     placeholder={f.placeholder}
                     {...register(f.id)}
+                    readOnly={!!f.formula} // Prevent manual editing if derived
                     className={`bg-zinc-800 text-white border ${
                       errors[f.id] ? "border-red-600" : "border-zinc-700"
                     } focus:ring-zinc-600`}
@@ -68,6 +142,7 @@ const UserForm: React.FC<{ form: FormType }> = ({ form }) => {
                 </div>
               );
             }
+
             case "checkbox": {
               const f = field as CheckBoxFieldType;
               return (
