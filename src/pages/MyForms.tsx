@@ -37,6 +37,16 @@ const MyForms = () => {
                 {form.name || "Untitled Form"}
               </h3>
               <p className="text-gray-600">{form.formFields.length} fields</p>
+              <p className="text-gray-600">
+                Created At:{" "}
+                {form.createdAt
+                  ? new Date(form.createdAt).toLocaleDateString(undefined, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "Unknown"}
+              </p>
             </div>
           ))}
         </div>

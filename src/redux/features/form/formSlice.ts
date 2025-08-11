@@ -9,7 +9,7 @@ interface FormState {
 }
 
 const initialState: FormState = {
-  data: { id: "", name: "", formFields: [] },
+  data: { createdAt: new Date(), id: "", name: "", formFields: [] },
   loading: false,
   error: null,
 };

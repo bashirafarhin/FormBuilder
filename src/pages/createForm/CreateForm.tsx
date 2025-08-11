@@ -36,6 +36,7 @@ const CreateForm = () => {
   useEffect(() => {
     dispatch(
       formActions.createForm({
+        createdAt: new Date(),
         id: uuidv4(),
         name: "Untitled Form",
         formFields: [],
