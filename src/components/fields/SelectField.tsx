@@ -4,6 +4,10 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "../../lib/utils";
+import { formActions } from "../../redux/features/form/formSlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
+import { X } from "lucide-react";
 
 interface SelectFieldProps {
   fieldVal: SelectFieldType;
@@ -15,6 +19,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   onFieldChange,
 }) => {
   // Initialize local states from fieldVal
+  const dispatch = useDispatch<AppDispatch>();
   const [label, setLabel] = useState(fieldVal.label || "");
   const [options, setOptions] = useState(
     Array.isArray(fieldVal.options) ? fieldVal.options.join(", ") : ""
@@ -63,6 +68,12 @@ const SelectField: React.FC<SelectFieldProps> = ({
         "space-y-4 border rounded-lg p-4 bg-zinc-900"
       )}
     >
+      <div className="w-full flex justify-between">
+        <p className="text-base text-gray-500">Field type: Select</p>
+        <button onClick={() => dispatch(formActions.removeField(fieldVal.id))}>
+          <X />
+        </button>
+      </div>
       <div>
         <Label htmlFor="field-label" className="text-zinc-200">
           Label <span className="text-zinc-500">*</span>

@@ -4,6 +4,10 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "../../lib/utils";
+import { formActions } from "../../redux/features/form/formSlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
+import { X } from "lucide-react";
 
 interface NumberFieldProps {
   fieldVal: NumberFieldType;
@@ -14,6 +18,7 @@ const NumberField: React.FC<NumberFieldProps> = ({
   fieldVal,
   onFieldChange,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <div
       className={cn(
@@ -21,6 +26,12 @@ const NumberField: React.FC<NumberFieldProps> = ({
         "space-y-4 border rounded-lg p-4 bg-zinc-900"
       )}
     >
+      <div className="w-full flex justify-between">
+        <p className="text-base text-gray-500">Field type: Number</p>
+        <button onClick={() => dispatch(formActions.removeField(fieldVal.id))}>
+          <X />
+        </button>
+      </div>
       <div>
         <Label htmlFor="field-label" className="text-zinc-200">
           Label <span className="text-zinc-500">*</span>

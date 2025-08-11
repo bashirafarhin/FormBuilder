@@ -51,6 +51,12 @@ const formSlice = createSlice({
         field.error = error;
       }
     },
+    removeField(state, action: PayloadAction<string>) {
+      const fieldIdToRemove = action.payload;
+      state.data.formFields = state.data.formFields.filter(
+        (field) => field.id !== fieldIdToRemove
+      );
+    },
     resetForm: () => initialState,
     setFormFields(state, action: PayloadAction<FormFieldType[]>) {
       state.data.formFields = action.payload;

@@ -4,6 +4,10 @@ import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import type { TextFieldType } from "../../lib/types/form";
 import { cn } from "../../lib/utils";
+import { formActions } from "../../redux/features/form/formSlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
+import { X } from "lucide-react";
 
 interface TextFieldProps {
   fieldVal: TextFieldType;
@@ -12,7 +16,7 @@ interface TextFieldProps {
 
 const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
   onFieldChange;
-
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <div
       className={cn(
@@ -20,6 +24,12 @@ const TextField: React.FC<TextFieldProps> = ({ fieldVal, onFieldChange }) => {
         "space-y-4 border rounded-lg p-4 bg-zinc-900"
       )}
     >
+      <div className="w-full flex justify-between">
+        <p className="text-base text-gray-500">Field type: Text</p>
+        <button onClick={() => dispatch(formActions.removeField(fieldVal.id))}>
+          <X />
+        </button>
+      </div>
       <div>
         <Label htmlFor="field-label" className="text-zinc-200">
           Label <span className="text-zinc-500">*</span>
