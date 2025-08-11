@@ -11,6 +11,13 @@ body {
   background-color: black;
   color: white;
   font-family: "Poppins", sans-serif;
+
+  /* Image settings */
+  background-image: url("/bg.png");
+  background-repeat: repeat-y;
+  background-size: 100% auto;
+  background-position: top center;
+  position: relative;
 }
 
 @layer base {

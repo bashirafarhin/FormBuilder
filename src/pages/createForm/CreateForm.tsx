@@ -184,8 +184,8 @@ const CreateForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="border border-zinc-700 flex flex-col rounded-lg shadow-lg space-y-6 p-6">
+    <div className="flex items-center justify-center min-h-screen border-5 border-pink-500">
+      <div className="border border-zinc-700 flex flex-col rounded-lg shadow-lg space-y-6 p-6 bg-black">
         <h1 className="text-[6vw] text-center font-semibold text-white">
           <i>Create Form</i>
         </h1>

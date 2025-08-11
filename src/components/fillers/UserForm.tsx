@@ -35,7 +35,7 @@ const UserForm: React.FC<{ form: FormType }> = ({ form }) => {
     <div className="flex items-center justify-center min-h-screen">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="border border-zinc-700 flex flex-col rounded-lg shadow-lg space-y-6 p-6"
+        className="border border-zinc-700 flex flex-col rounded-lg shadow-lg space-y-6 p-6 bg-black"
       >
         <h1 className="text-[6vw] text-center font-semibold text-white">
           <i>{form.name}</i>
